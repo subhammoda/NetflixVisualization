@@ -9,22 +9,17 @@ const url = "https://public.tableau.com/views/NetflixVisualization_1724727358169
 
 // Get DOM elements
 const vizContainer = document.getElementById('vizContainer');
-const exportPDF = document.getElementById('exportPDF');
-const exportImage = document.getElementById('exportImage');
 
 // Tableau visualization options
 const options = {
     hideTabs: true,
-    height: 800,
-    width: 1470,
+    height: 1000,
+    width: 1600,
     onFirstInteraction: function () {
         try {
             workbook = viz.getWorkbook();
             activeSheet = workbook.getActiveSheet();
             console.log("✅ Dashboard is interactive and ready!");
-            
-            // Enable export buttons after first interaction
-            enableExportButtons();
         } catch (error) {
             console.error("❌ Error in first interaction:", error);
         }
@@ -43,30 +38,6 @@ function hideLoadingMessage() {
     }
 }
 
-// Function to enable export buttons
-function enableExportButtons() {
-    if (exportPDF) {
-        exportPDF.disabled = false;
-        exportPDF.style.opacity = '1';
-    }
-    if (exportImage) {
-        exportImage.disabled = false;
-        exportImage.style.opacity = '1';
-    }
-}
-
-// Function to disable export buttons
-function disableExportButtons() {
-    if (exportPDF) {
-        exportPDF.disabled = true;
-        exportPDF.style.opacity = '0.5';
-    }
-    if (exportImage) {
-        exportImage.disabled = true;
-        exportImage.style.opacity = '0.5';
-    }
-}
-
 // Initialize the visualization
 function initViz() {
     try {
@@ -79,9 +50,6 @@ function initViz() {
         if (typeof tableau === 'undefined') {
             throw new Error('Tableau API not loaded');
         }
-        
-        // Disable export buttons initially
-        disableExportButtons();
         
         // Create the visualization
         viz = new tableau.Viz(vizContainer, url, options);
@@ -109,38 +77,6 @@ function showErrorMessage(message) {
     }
 }
 
-// Generate PDF export
-function generatePDF() {
-    try {
-        if (viz) {
-            viz.showExportPDFDialog();
-            console.log('📄 PDF export dialog opened');
-        } else {
-            console.warn('⚠️ Visualization not ready for PDF export');
-            alert('Please wait for the dashboard to load completely before exporting.');
-        }
-    } catch (error) {
-        console.error('❌ Error generating PDF:', error);
-        alert('Failed to generate PDF. Please try again.');
-    }
-}
-
-// Generate image export
-function generateImage() {
-    try {
-        if (viz) {
-            viz.showExportImageDialog();
-            console.log('🖼️ Image export dialog opened');
-        } else {
-            console.warn('⚠️ Visualization not ready for image export');
-            alert('Please wait for the dashboard to load completely before exporting.');
-        }
-    } catch (error) {
-        console.error('❌ Error generating image:', error);
-        alert('Failed to generate image. Please try again.');
-    }
-}
-
 // Event listeners
 document.addEventListener("DOMContentLoaded", function() {
     console.log('📄 DOM loaded, initializing application...');
@@ -148,29 +84,9 @@ document.addEventListener("DOMContentLoaded", function() {
     // Initialize visualization
     initViz();
     
-    // Add event listeners for export buttons
-    if (exportPDF) {
-        exportPDF.addEventListener("click", generatePDF);
-        console.log('📄 PDF export button listener added');
-    }
-    
-    if (exportImage) {
-        exportImage.addEventListener("click", generateImage);
-        console.log('🖼️ Image export button listener added');
-    }
-    
-    // Add keyboard shortcuts
+    // Add keyboard shortcuts (if needed for future features)
     document.addEventListener('keydown', function(event) {
-        // Ctrl/Cmd + P for PDF export
-        if ((event.ctrlKey || event.metaKey) && event.key === 'p') {
-            event.preventDefault();
-            generatePDF();
-        }
-        // Ctrl/Cmd + I for image export
-        if ((event.ctrlKey || event.metaKey) && event.key === 'i') {
-            event.preventDefault();
-            generateImage();
-        }
+        // Reserved for future shortcuts
     });
 });
 
